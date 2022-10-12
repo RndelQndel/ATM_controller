@@ -1,39 +1,39 @@
 #include "ATM.h"
-#include <unistd.h>
+#include "CardReader.h"
 
-Information g_Info;
-
-int main()
+void ATM::DefaultSetting()
 {
 	using namespace std;
-	string answer;
 
 	cout << "==========================" << endl;
 	cout << "INPUT PRE SETTING" << endl;
 	cout << "IP ADDR : ";
-	cin >> answer;
-	g_Info.ip_addr = answer;
+	cin >> m_strIPAddr;
 	cout << "Port Num : ";
-	cin >> answer;
-	g_Info.port = answer;
+	cin >> m_strPortNum;
 	cout << "==========================" << endl;
+}
 
-	while(true)
-	{
-		string card_num, pin_num;
-		cout << "START the ATM SYSTEM" << endl;
-		cout << endl;
-		cout << "Input Card Number : ";
-		cin >> card_num;
-		cout << "Input PIN Number : ";
-		cin >> pin_num;
+unsigned int ATM::ATMWork()
+{
+	using namespace std;
 
-		// communicate to server
+	unsigned int unState = ATM_STATE::ATM_STATE_INIT;
+	std::string card_num;
+	unsigned long long pin_num;
+	CardReader cCardReader;
 
-		// success to balance, deposit, withdraw
+	cout << "START the ATM SYSTEM" << endl;
+	cout << endl;
+	cout << "Input Card Number : ";
+	cin >> card_num;
+	cout << "Input PIN Number : ";
+	cin >> pin_num;
 
-		break;
-	}
+	cCardReader.SetCardNum( card_num );
+	cCardReader.SetPinNum( pin_num );
 
-	return( 0 );
+	
+
+	return( unState );
 }
