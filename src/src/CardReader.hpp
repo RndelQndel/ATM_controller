@@ -26,8 +26,6 @@ public:
 
     void SetPinNum( unsigned long long ullPin ) { m_ullPin = ullPin; }
     unsigned long long GetPinNum( void ) { return m_ullPin; }
-
-    
 };
 
 #endif

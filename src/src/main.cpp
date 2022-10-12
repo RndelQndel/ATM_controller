@@ -4,14 +4,17 @@
 int main( void )
 {
     unsigned int unAtmState = ATM_STATE::ATM_STATE_INIT;
-    ATM catm;
+    std::shared_ptr<ATM> pAtm = std::make_shared<ATM>();
+    ATM ATM( pAtm );
 
-    catm.DefaultSetting();
+    pAtm->DefaultSetting();
 
     while( unAtmState != ATM_STATE::ATM_STATE_STOP )
     {
-        unAtmState = catm.ATMWork();
+        unAtmState = pAtm->ATMWork();
     }
+
+    pAtm = nullptr;
 
     return ( 0 );
 }

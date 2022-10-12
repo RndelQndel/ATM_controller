@@ -1,5 +1,4 @@
 #include "ATM.h"
-#include "CardReader.h"
 
 void ATM::DefaultSetting()
 {
@@ -21,7 +20,6 @@ unsigned int ATM::ATMWork()
 	unsigned int unState = ATM_STATE::ATM_STATE_INIT;
 	std::string card_num;
 	unsigned long long pin_num;
-	CardReader cCardReader;
 
 	cout << "START the ATM SYSTEM" << endl;
 	cout << endl;
@@ -30,10 +28,15 @@ unsigned int ATM::ATMWork()
 	cout << "Input PIN Number : ";
 	cin >> pin_num;
 
-	cCardReader.SetCardNum( card_num );
-	cCardReader.SetPinNum( pin_num );
+	m_cCardReader.SetCardNum( card_num );
+	m_cCardReader.SetPinNum( pin_num );
+	// Card Num with Pin Num to Server
 
-	
+	// Get Response
+
+	// 
+
+
 
 	return( unState );
 }
