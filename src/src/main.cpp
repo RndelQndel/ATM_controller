@@ -3,18 +3,15 @@
 
 int main( void )
 {
-    unsigned int unAtmState = ATM_STATE::ATM_STATE_INIT;
-    std::shared_ptr<ATM> pAtm = std::make_shared<ATM>();
-    ATM ATM( pAtm );
+    unsigned int unAtmState = ATM_VALUE::ATM_STATE::ATM_STATE_INIT;
+    ATM atm;    
 
-    pAtm->DefaultSetting();
+    atm.DefaultSetting();
 
-    while( unAtmState != ATM_STATE::ATM_STATE_STOP )
+    while( unAtmState != ATM_VALUE::ATM_STATE::ATM_STATE_STOP )
     {
-        unAtmState = pAtm->ATMWork();
+        unAtmState = atm.ATMWork();
     }
-
-    pAtm = nullptr;
 
     return ( 0 );
 }

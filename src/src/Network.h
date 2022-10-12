@@ -21,11 +21,14 @@ class Network
 private:
     std::string m_strIPAddr;
     std::string m_strPort;
-    int         m_fd = 0;
+
+    int StringToInt( const std::string& strValue );
 public:
     void SetIPPort( const std::string &strIP, const std::string &strPort );
     SHR_PTR LoginCardPinNum( const std::string& strCardNum, const unsigned long long& ullPin );
-
+    std::string Balance( const std::string& AccountNum );
+    std::string Deposit( const std::string& AccountNum, const int& value );
+    std::string Withdraw( const std::string& AccountNum, const int& value );
 };
 
 #endif

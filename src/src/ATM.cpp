@@ -1,28 +1,48 @@
 #include "ATM.h"
 
-void ATM::DefaultSetting()
-{
-	using namespace std;
+using namespace std;
 
-	cout << "==========================" << endl;
-	cout << "INPUT PRE SETTING" << endl;
-	cout << "IP ADDR : ";
-	cin >> m_strIPAddr;
-	cout << "Port Num : ";
-	cin >> m_strPortNum;
-	cout << "==========================" << endl;
+void ATM::GetExit( std::string& exit )
+{
+	cout << endl << "==========================" << endl;
+	cout << "Want to Exit? [y/n]" << endl;
+	cin >> exit;
+	cout << "==========================" << endl << endl;
 }
 
-unsigned int ATM::ATMWork()
+std::string ATM::PrintBankAccount( const SHR_PTR pvecBank )
 {
-	using namespace std;
+	if( 0 == pvecBank->size() )
+	{
+		cout << "====No Account====" << endl;
+		return( "" );
+	}
 
-	unsigned int unState = ATM_STATE::ATM_STATE_INIT;
+	cout << endl << "Print Account" << endl;
+	unsigned int unIndex = 0;
+	for( auto it : *pvecBank )
+	{
+		cout << ++unIndex << ". " << it.AccountNum << endl;
+	}
+
+	do{
+		cout << endl << "Select Bank Accout :";
+		cin >> unIndex;
+	}
+	while( unIndex <=0 || pvecBank->size() < unIndex );
+
+	auto it = pvecBank->at( unIndex - 1 );
+
+	return( it.AccountNum );
+}
+
+void ATM::GetCardPin()
+{
 	std::string card_num;
 	unsigned long long pin_num;
 
-	cout << "START the ATM SYSTEM" << endl;
-	cout << endl;
+	cout << "=====Thank you=====" << endl;
+	cout << "START the ATM SYSTEM" << endl << endl;
 	cout << "Input Card Number : ";
 	cin >> card_num;
 	cout << "Input PIN Number : ";
@@ -30,13 +50,76 @@ unsigned int ATM::ATMWork()
 
 	m_cCardReader.SetCardNum( card_num );
 	m_cCardReader.SetPinNum( pin_num );
-	// Card Num with Pin Num to Server
+}
 
-	// Get Response
+void ATM::GetService( unsigned int& unService )
+{
+	do
+	{
+		cout << endl << "==========================" << endl;
+		cout << "0. Exit" << endl;
+		cout << "1. Balance" << endl;
+		cout << "2. Deposit" << endl;
+		cout << "3. Withdraw" << endl;
+		cout << "Select a Service : ";
+		cin >> unService;
+	} while ( unService < 0 || 3 < unService );
+}
 
-	// 
+void ATM::DefaultSetting()
+{
+	cout << endl << "==========================" << endl;
+	cout << "INPUT PRE SETTING" << endl;
+	cout << "IP ADDR : ";
+	cin >> m_strIPAddr;
+	cout << "Port Num : ";
+	cin >> m_strPortNum;
+	cout << "==========================" << endl << endl;
+}
 
+unsigned int ATM::ATMWork()
+{
+	unsigned int unService = ATM_VALUE::ATM_SERVICE::ATM_SERVICE_NONE;
+	unsigned int unState = ATM_VALUE::ATM_STATE::ATM_STATE_RUNNING;
+	std::string exit = "n", AccountNum, Response;
 
+	GetExit(exit);
+
+	if( 0 == exit.compare("y") )
+		return( ATM_VALUE::ATM_STATE::ATM_STATE_STOP );
+
+	GetCardPin();
+	SHR_PTR pvecBank = m_cNetwork.LoginCardPinNum( m_cCardReader.GetCardNum(), m_cCardReader.GetPinNum() );
+	AccountNum = PrintBankAccount( pvecBank );
+	pvecBank = nullptr;
+
+	GetService( unService );
+	switch( unService )
+	{
+		case ATM_VALUE::ATM_SERVICE::ATM_SERVICE_BALANCE :
+		{
+			Response = m_cNetwork.Balance( AccountNum );
+			break;
+		}
+		case ATM_VALUE::ATM_SERVICE::ATM_SERVICE_DEPOSIT :
+		{
+			Response = m_cNetwork.Deposit( AccountNum, 5 );
+			break;
+		}
+		case ATM_VALUE::ATM_SERVICE::ATM_SERVICE_WITHDRAW :
+		{
+			Response = m_cNetwork.Withdraw( AccountNum, 5 );
+			break;
+		}
+		default :
+		{
+			Response = "=========EXIT=========";
+			break;
+		}
+	}
+
+	cout << Response << endl;
+	cout << "Thank you" << endl;
 
 	return( unState );
 }
