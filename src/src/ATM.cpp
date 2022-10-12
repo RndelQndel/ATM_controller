@@ -22,7 +22,7 @@ std::string ATM::PrintBankAccount( const SHR_PTR pvecBank )
 	unsigned int unIndex = 0;
 	for( auto it : *pvecBank )
 	{
-		cout << ++unIndex << ". " << it.AccountNum << endl;
+		cout << ++unIndex << ". " << it << endl;
 	}
 
 	do{
@@ -33,7 +33,7 @@ std::string ATM::PrintBankAccount( const SHR_PTR pvecBank )
 
 	auto it = pvecBank->at( unIndex - 1 );
 
-	return( it.AccountNum );
+	return( it );
 }
 
 void ATM::GetCardPin()
@@ -81,6 +81,7 @@ unsigned int ATM::ATMWork()
 {
 	unsigned int unService = ATM_VALUE::ATM_SERVICE::ATM_SERVICE_NONE;
 	unsigned int unState = ATM_VALUE::ATM_STATE::ATM_STATE_RUNNING;
+	unsigned int unValue = 0;
 	std::string exit = "n", AccountNum, Response;
 
 	GetExit(exit);
@@ -98,17 +99,27 @@ unsigned int ATM::ATMWork()
 	{
 		case ATM_VALUE::ATM_SERVICE::ATM_SERVICE_BALANCE :
 		{
+			cout << "=======BALANCE=======" << endl;
+			cout << "Balance : ";
 			Response = m_cNetwork.Balance( AccountNum );
 			break;
 		}
 		case ATM_VALUE::ATM_SERVICE::ATM_SERVICE_DEPOSIT :
 		{
-			Response = m_cNetwork.Deposit( AccountNum, 5 );
+			cout << "=======DEPOSIT=======" << endl;
+			cout << "Enter the Value : ";
+			cin >> unValue;
+			cout << endl << "Balance : ";
+			Response = m_cNetwork.Deposit( AccountNum, unValue );
 			break;
 		}
 		case ATM_VALUE::ATM_SERVICE::ATM_SERVICE_WITHDRAW :
 		{
-			Response = m_cNetwork.Withdraw( AccountNum, 5 );
+			cout << "=======WITHDRAW=======" << endl;
+			cout << "Enter the Value  : ";
+			cin >> unValue;
+			cout << endl << "Balance : ";
+			Response += m_cNetwork.Withdraw( AccountNum, unValue );
 			break;
 		}
 		default :
