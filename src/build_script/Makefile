@@ -9,6 +9,9 @@ ATM = ATM.o
 MAIN = main.o
 
 all: main
+	
+$(TARGET_PATH):	
+	mkdir ./../../build
 
 $(NETWORK): $(SOURCE_PATH)/Network.cpp
 	$(CC) -c $(SOURCE_PATH)/Network.cpp 
@@ -19,10 +22,10 @@ $(ATM): $(NETWORK) $(SOURCE_PATH)/ATM.cpp
 $(MAIN): $(ATM) $(SOURCE_PATH)/main.cpp
 	$(CC) -c $(SOURCE_PATH)/main.cpp
 
-main: $(MAIN)
+main: $(MAIN) $(TARGET_PATH)
 	$(CC) $(STD) $(INC) -o $(TARGET) ATM.o Network.o main.o
 	rm -rf *.o
 
 clean:
 	rm -rf *.o
-	rm -rf ./../../build/*
+	rm -rf ./../../build
