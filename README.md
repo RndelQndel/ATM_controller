@@ -3,7 +3,7 @@
 
 ## To Build
 ```
-cd build_script
+cd src/build_script
 make
 ```  
 
